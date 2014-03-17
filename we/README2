@@ -1,0 +1,44 @@
+/* application code example */
+
+	core_set_classloader("CoreClassLoader");
+	
+	$io = core_load_io("CoreIoMysql");
+	$map = core_load_map("CoreMapObj2Sql");
+	$map = core_load_map("CoreMapSql2Obj");
+	$job = core_load_job("CoreJobExample");
+
+	core_set_attr($io,"host", "127.0.0.1");
+	core_set_attr($io,"port", "3306");
+	core_set_attr($io,"user", "awen");
+	core_set_attr($io,"passwd", "awen");
+
+	core_set_attr($map, "test.login", "uname:uname, uid:uid");
+	core_set_attr($map, "test.info", "uid:uid, uname:uname, age:age, sex:sex, article:article");
+	core_set_attr($map, "test.books", "bid:bid, name:name, price:price, owner:owner");
+	...
+
+	core_add_map($io, READ_IN, $map); 
+	core_add_map($io, READ_OUT, $map); 
+	core_add_map($io, WRITE_IN, $map); 
+	core_add_map($io, WRITE_OUT, $map); 
+
+	/* io operation */
+
+	$info = core_read($io, array("info.uname=?", "awen"));
+	$books = core_read($io, array("books.price<? and books.owner=?", "1000", "awen"));
+	echo $info->name;
+	echo $info->uid;
+	foreach ($books as $b) {
+		echo $b->bid;
+		echo $b->name;
+		echo $b->price;
+	}
+
+	/* filter operation */
+
+	$query = core_map($filter, array("info.uname=?", "awen"));
+	$query = core_map($filter, array("books.price<? and books.owner", "1000", "awen"));
+
+
+
+
